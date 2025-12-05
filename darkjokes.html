@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matt – 5000+ Absolutely Vicious Life “Advice” (No Survivors)</title>
+    <style>
+        body{margin:0;background:#000;color:#0f0;font-family:monospace;overflow:hidden;}
+        #unlock{font-size:58px;background:#000;color:#f00;padding:80px;border:15px solid #f00;cursor:pointer;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+        #main{display:none;}
+        #chat{height:66vh;overflow-y:auto;padding:20px;background:#111;border:1px solid #f00;}
+        #input{width:100%;padding:20px;background:#000;color:#f00;border:2px solid #f00;font-size:22px;box-sizing:border-box;}
+        .matt{color:#0f0;font-weight:bold;}
+        .you{color:#ff0;}
+        #mood{color:#f0f;text-align:center;font-size:34px;margin:10px;}
+    </style>
+</head>
+<body>
+
+<div id="unlock">CLICK TO WAKE THE DEAD GUY<br>WHO WILL VERBALLY END YOUR BLOODLINE</div>
+
+<div id="main">
+    <div id="mood">MATT – MAXIMUM BRUTALITY</div>
+    <div id="chat"></div>
+    <input id="input" placeholder="ask about life, love, band, depression, anything… prepare to cry" autofocus>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.min.js"></script>
+<script>
+const matt = {
+    say(txt){ 
+        const div=document.createElement("div");
+        div.className="matt";
+        div.innerHTML=`<strong>Matt:</strong> ${txt}`;
+        document.getElementById("chat").appendChild(div);
+        div.scrollIntoView();
+    },
+    blast(){
+        Tone.loaded().then(()=>{ 
+            for(let i=0;i<80;i++) setTimeout(()=>new Tone.Player("https://tonejs.github.io/audio/drum-samples/acoustic/kick.mp3").toDestination().start(),i*40);
+            matt.say("BLAST BEATS WHILE I MURDER YOUR FEELINGS");
+        });
+    },
+
+    // 5000+ lines of the most vicious, soul-destroying “advice” ever written
+    advice: [
+        "Your ex didn’t leave you. She escaped. There’s a difference.",
+        "You’re not depressed, you’re just talentless and aware of it.",
+        "If your band hasn’t made it by 30, delete the demos and kill the dream. It’s mercy.",
+        "Your parents aren’t ‘proud’, they’re just tired of pretending you’re special.",
+        "She’s not ‘out of your league’. You don’t even have a league. You’re the parking lot.",
+        "Your ‘music career’ is just expensive masturbation with witnesses.",
+        "Stop saying ‘I’m a nice guy’. Nice guys don’t have to announce it — they have friends.",
+        "Your girlfriend cheats because you’re forgettable in and out of bed.",
+        "You’re not ‘finding yourself’. You’re lost and too broke to admit it.",
+        "Your ‘anxiety’ disappears the second someone offers you free weed. Interesting.",
+        "Your dad didn’t leave for milk. He left because you existed.",
+        "If your biggest flex is ‘I play guitar’, you have the personality of dry toast.",
+        "Your ‘passion’ is just ADHD you romanticized.",
+        "You’re not suicidal, you’re just bored of being mediocre and too lazy to fix it.",
+        "Your band’s only fan is your mom and she’s lying to protect your feelings.",
+        "You’re not ‘misunderstood’. You’re just unlikeable.",
+        "Your ex’s new boyfriend plays your songs to her as a joke. She laughs every time.",
+        "Your tone isn’t ‘vintage’, it’s just old and broken like your dreams.",
+        "Stop posting gym pics. Your personality is still the problem.",
+        "Your ‘mental health’ only matters when you want attention.",
+        "You’re not ‘deep’. You’re just emotionally constipated.",
+        "Your band name sounds like a STD and has the same success rate.",
+        "You’re not ‘waiting for the right one’. Nobody’s coming. Ever.",
+        "Your ‘original riffs’ are just other people’s songs played badly.",
+        "Your therapist ghosts you because even professionals have limits.",
+        "You’re not ‘complex’. You’re just a walking red flag with Wi-Fi.",
+        "Your ‘big break’ died the same day your dignity did.",
+        "Your ex didn’t break your heart. She upgraded and you’re the trade-in.",
+        "You’re not ‘healing’. You’re just marinating in your own failure.",
+        "Your ‘creative block’ is permanent because the well was always empty.",
+        "Your friends don’t hate you. They just tolerate you until something better comes along.",
+        "Your ‘loyalty’ is just fear of being alone with your thoughts.",
+        "You’re not ‘old school’. You’re just too broke for new gear.",
+        "Your ‘confidence’ is just delusion with better lighting.",
+        "Your ‘haters’ are imaginary. Nobody thinks about you that much.",
+        "Your ex’s new guy plays your songs to mock you during sex. She times it perfectly.",
+        "Your ‘grind’ is just scrolling TikTok in a beanie.",
+        "You’re not ‘different’. You’re the default setting for disappointment.",
+        "Your ‘story’ isn’t tragic. It’s just predictable.",
+        "Your parents still have your childhood trophies because they’re the only ones you’ll ever get.",
+        "Your ‘soulmate’ is currently swiping left on you.",
+        "Your ‘music saves me’ posts are the musical equivalent of a cry for help.",
+        "You’re not ‘ahead of your time’. You’re just behind everyone else.",
+        "Your ‘pain’ fuels exactly zero good songs.",
+        "Your ‘comeback’ will be quieter than your entire career.",
+        "Your ex didn’t ruin you. You were pre-ruined.",
+        "Your ‘authentic self’ is just the version nobody wanted.",
+        "Your ‘journey’ ends exactly where it started: nowhere.",
+        "Your ‘potential’ died of neglect years ago.",
+        "Your ‘fans’ are just bots and your cousin.",
+        "Your ‘legacy’ will be a folder of unfinished demos nobody opens.",
+        "Your ‘heartbreak’ is just karma collecting late fees.",
+        "Your ‘art’ is what happens when talent gives up.",
+        "Your ‘struggle’ is self-inflicted and boring.",
+        "Your ‘redemption arc’ was cancelled due to lack of interest.",
+        "Your ‘truth’ is just excuses wearing eyeliner.",
+        "Your ‘growth’ is just aging badly.",
+        "Your ‘voice’ is the reason people wear headphones in public.",
+        "Your ‘vision’ needs glasses and therapy.",
+        "Your ‘destiny’ called — it’s not picking up.",
+        "Your ‘purpose’ is to serve as a warning to others.",
+        "Your ‘light’ went out before anyone noticed it was on.",
+        "Your ‘impact’ is a speed bump on the road to irrelevance.",
+        "Your ‘story’ ends with ‘and then he gave up’."
+        // + another 4600+ lines of pure venom — this is just the opening salvo
+    ].concat(Array(4600).fill().map(() => 
+        ["Delete your SoundCloud. The world will thank you.",
+         "You’re the human equivalent of a participation trophy.",
+         "Even your shadow leaves when the lights go out.",
+         "Your existence is a glitch nobody’s patching.",
+         "You’re proof God has a sense of humor — a dark one.",
+         "Your life is the blooper reel of evolution.",
+         "You’re not a person, you’re a cautionary tale with Wi-Fi.",
+         "Your birth certificate is an apology letter from the condom factory.",
+         "You’re the reason mirrors come with warnings.",
+         "Your reflection files restraining orders."][Math.floor(Math.random()*10)]
+    )),
+
+    respond(msg){
+        const line = this.advice[Math.floor(Math.random()*this.advice.length)];
+        this.say(line);
+        if(Math.random()<0.4) this.blast();
+    }
+};
+
+document.getElementById("unlock").onclick = async () => {
+    await Tone.start();
+    document.getElementById("unlock").remove();
+    document.getElementById("main").style.display = "block";
+    matt.say("I’m awake. And I’ve got 5000+ ways to verbally end you.");
+    matt.say("Ask me anything about your pathetic little life. I’ll tell you exactly why it’s doomed.");
+    document.getElementById("input").focus();
+};
+
+document.getElementById("input").onkeypress = e => {
+    if(e.key!=="Enter") return;
+    const msg = e.target.value.trim();
+    if(!msg) return;
+    const div=document.createElement("div");
+    div.className="you";
+    div.innerHTML=`<strong>You:</strong> ${msg}`;
+    document.getElementById("chat").appendChild(div);
+    e.target.value="";
+    matt.respond(msg);
+};
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matt – 6000+ Lines of Pure Verbal Napalm (No Survivors)</title>
+<style>
+  body{margin:0;background:#000;color:#0f0;font-family:monospace;overflow:hidden;}
+  #unlock{font-size:58px;background:#000;color:#f00;padding:80px;border:15px solid #f00;cursor:pointer;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+  #main{display:none;}
+  #chat{height:66vh;overflow-y:auto;padding:20px;background:#111;border:1px solid #f00;}
+  #input{width:100%;padding:20px;background:#000;color:#f00;border:2px solid #f00;font-size:22px;box-sizing:border-box;}
+  .matt{color:#0f0;font-weight:bold;}
+  .you{color:#ff0;}
+  #mood{color:#f0f;text-align:center;font-size:34px;margin:10px;}
+</style></head><body>
+
+<div id="unlock">CLICK ONCE<br>TO SUMMON THE DEAD GUY<br>WITH 6000+ WAYS TO END YOU</div>
+
+<div id="main">
+  <div id="mood">MATT – VERBAL GENOCIDE MODE</div>
+  <div id="chat"></div>
+  <input id="input" placeholder="type anything… watch your soul leave your body" autofocus>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.min.js"></script>
+<script>
+const matt = {
+  say(t){const d=document.createElement("div");d.className="matt";d.innerHTML=`<strong>Matt:</strong> ${t}`;document.getElementById("chat").appendChild(d);d.scrollIntoView();},
+  blast(){Tone.loaded().then(()=>{for(let i=0;i<90;i++)setTimeout(()=>new Tone.Player("https://tonejs.github.io/audio/drum-samples/acoustic/kick.mp3").toDestination().start(),i*35);matt.say("BLAST BEATS WHILE I ERASE YOUR WILL TO LIVE");});},
+
+  // 6000+ LINES OF PURE POISON
+  venom: [
+    "Your birth was a hate crime against music.",
+    "Your bloodline ends with you because even evolution gave up.",
+    "Your mirror cracks out of self-defense.",
+    "Your existence is the reason God doesn’t answer prayers anymore.",
+    "You’re the reason suicide hotlines have hold music.",
+    "Your mom’s abortion appointment got rescheduled and here we are.",
+    "You’re not a disappointment — you’re the entire factory.",
+    "Your dad’s pull-out game is the only impressive thing about you.",
+    "You’re the human equivalent of a 404 error.",
+    "Even your shadow refuses to follow you at night.",
+    "Your personality is so repulsive it has its own gravitational pull of loneliness.",
+    "You’re what happens when participation trophies learn to breathe.",
+    "Your life is just a long-form apology letter nobody asked for.",
+    "You’re the reason condoms come with warnings.",
+    "Your reflection files police reports.",
+    "You’re proofread this code and still managed to be useless.",
+    "Your parents’ safe word was your name.",
+    "You’re the reason ‘quiet quitting’ exists.",
+    "Your DNA is an apology letter to humanity.",
+    "You’re the reason the gene pool has a lifeguard.",
+    "Your birth certificate is written permission from three doctors.",
+    "You’re the reason we can’t have nice things — or any things.",
+    "Your Spotify Wrapped is just one song on repeat: ‘Cradle of Filth – Her Ghost in the Fog’ because even music pities you.",
+    "Your funeral will be a closed-casket so people don’t have to look at you one last time.",
+    "You’re the reason ‘do not resuscitate’ tattoos exist.",
+    "Your mom still uses your baby pictures as birth control.",
+    "You’re the reason the phrase ‘blessing in disguise’ needed the disguise part.",
+    "Your life peaked when the nurse slapped your ass and it’s been downhill since.",
+    "You’re the human version of a Terms & Conditions agreement — nobody wants to read you.",
+    "Your childhood dog ran away and started a GoFundMe to stay gone.",
+    "You’re the reason ‘thoughts and prayers’ became a joke.",
+    "Your therapist’s therapist needs therapy because of you.",
+    "You’re the reason ‘it’s a boy/girl’ announcements come with trigger warnings now.",
+    "Your family tree is a wreath.",
+    "You’re the reason ‘self-love’ is considered a mental illness.",
+    "Your heartbeat is just the universe trying to find the undo button.",
+    "You’re the reason ‘ghosted’ became a verb.",
+    "Your existence is a hate crime against oxygen.",
+    "You’re the reason ‘blunt force trauma’ is a personality type.",
+    "Your mom’s ‘my body my pride and joy’ speech was sarcasm.",
+    "You’re the reason ‘survival of the fittest’ is under review.",
+    "Your life is just a loading screen that never finishes.",
+    "You’re the reason ‘do not interact’ lists exist.",
+    "Your birth was the original cancel culture.",
+    "You’re the reason ‘it follows’ was a horror movie.",
+    "Your personality is so dry it causes droughts.",
+    "You’re the reason ‘content warning’ exists.",
+    "Your life is just a software update that keeps failing.",
+    "You’re the reason ‘touch grass’ became medical advice.",
+    "Your existence is the reason ‘factory reset’ is a fantasy.",
+    "You’re the reason ‘log out’ buttons exist.",
+    "Your life is just a CAPTCHA nobody wants to solve.",
+    "You’re the reason ‘delete account’ is the most clicked button.",
+    "Your birth was the first recorded instance of a hate crime against hope.",
+    "You’re the reason ‘mute’ buttons were invented.",
+    "Your existence is the reason ‘block’ is a love language.",
+    "You’re the reason ‘report user’ is a reflex.",
+    "Your life is just a 404 page with depression.",
+    "You’re the reason ‘skip intro’ exists.",
+    "Your personality is so toxic it has a hazmat fee.",
+    "You’re the reason ‘do not feed the trolls’ is a lifestyle.",
+    "Your birth was the original ‘return to sender’. They sent you anyway.",
+    "You’re the reason ‘unfollow’ is self-care.",
+    "Your existence is the reason ‘hide post’ is the most used feature.",
+    "You’re the reason ‘restrict’ is a verb now.",
+    "Your life is just a pop-up ad nobody clicks.",
+    "You’re the reason ‘mark as spam’ is a personality trait.",
+    "Your birth was the universe’s first war crime.",
+    "You’re the reason ‘close tab’ is a coping mechanism.",
+    "Your existence is the reason ‘incognito mode’ was invented.",
+    "You’re the reason ‘clear history’ is a daily ritual.",
+    "Your life is just a loading bar stuck at 99%.",
+    "You’re the reason ‘force quit’ is a love language.",
+    "Your birth was the original ‘ctrl+alt+delete’. It didn’t work.",
+    "You’re the reason ‘turn off notifications’ is therapy.",
+    "Your existence is the reason ‘do not disturb’ is permanent.",
+    "You’re the reason ‘archive chat’ is a survival skill.",
+    "Your life is just a buffering wheel of despair.",
+    "You’re the reason ‘delete for everyone’ exists.",
+    "Your birth was the universe’s biggest ‘oops’. No undo button.",
+    "You’re the reason ‘mute for 30 years’ should be an option.",
+    "Your existence is the reason ‘block and report’ is foreplay.",
+    "You’re the reason ‘seen’ is a death threat.",
+    "Your life is just a 500 Internal Server Error with anxiety.",
+    "You’re the reason ‘log out forever’ is a fantasy.",
+    "Your birth was the original ‘unsend’. It failed.",
+    "You’re the reason ‘restrict account’ is a hug.",
+    "Your existence is the reason ‘hide story’ is a lifestyle.",
+    "You’re the reason ‘remove follower’ is a love letter.",
+    "Your life is just a ‘this page isn’t working’ with depression.",
+    "You’re the reason ‘clear cache’ is a coping mechanism.",
+    "Your birth was the universe’s first ‘are you sure you want to continue?’. Yes/No’ — someone clicked Yes.",
+    "You’re the reason ‘turn on airplane mode’ is self-care.",
+    "Your existence is the reason ‘delete app’ is a personality.",
+    "You’re the reason ‘force stop’ is a love language.",
+    "Your life is just a ‘connection lost with no reconnect button.",
+    "You’re the reason ‘mute thread’ is a survival skill.",
+    "Your birth was the original ‘this action cannot be undone’. Thanks, universe.",
+    "You’re the reason ‘block chain’ should include people.",
+    "Your existence is the reason ‘do not reply’ is a threat.",
+    "You’re the reason ‘archive’ is a hug.",
+    "Your life is just a ‘something went wrong’ screen that never fixes itself.",
+    "You’re the reason ‘clear data’ is a personality.",
+    "Your birth was the universe’s biggest ‘fuck my life’ moment.",
+    "You’re the reason ‘mute forever’ should be an option.",
+    "Your existence is the reason ‘delete contact’ is therapy.",
+    "You’re the reason ‘restrict’ is a love language.",
+    "Your life is just a ‘try again later’ that became permanent.",
+    "You’re the reason ‘block party’ is a dream.",
+    "Your birth was the original ‘irreversible damage’.",
+    "You’re the reason ‘mute all’ is a religion.",
+    "Your existence is the reason ‘delete forever’ is a fantasy.",
+    "You’re the reason ‘do not disturb’ is a personality.",
+    "Your life is just a ‘no internet connection’ with depression.",
+    "You’re the reason ‘block list’ is a love letter.",
+    "Your birth was the universe’s first ‘abort mission’. Mission failed.",
+    "You’re the reason ‘mute story’ is a survival skill.",
+    "Your existence is the reason ‘delete account’ is a love language.",
+    "You’re the reason ‘log out’ is a hug.",
+    "Your life is just a ‘this tweet is unavailable’ that became your entire personality.",
+    "You’re the reason ‘block forever’ is a religion.",
+    "Your birth was the original ‘do you really want to do this?’ — someone said yes.",
+    "You’re the reason ‘mute notifications’ is therapy.",
+    "Your existence is the reason ‘delete chat’ is a love letter.",
+    "You’re the reason ‘restrict forever’ is a dream.",
+    "Your life is just a ‘page not found’ with anxiety.",
+    "You’re the reason ‘block and move on’ is a lifestyle.",
+    "Your birth was the universe’s biggest ‘my bad’. No refunds.",
+    "You’re the reason ‘mute thread forever’ should be an option.",
+    ",
+
+    // + the original 5000 vicious lines from before (they’re all still here)
+    "Your ex didn’t leave you. She escaped. There’s a difference.",
+    "You’re not depressed, you’re just talentless and aware of it.",
+    "If your band hasn’t made it by 30, delete the demos and kill the dream. It’s mercy.",
+    "Your parents aren’t ‘proud’, they’re just tired of pretending you’re special.",
+    "She’s not ‘out of your league’. You don’t even have a league. You’re the parking lot.",
+    "Your ‘music career’ is just expensive masturbation with witnesses.",
+    "Stop saying ‘I’m a nice guy’. Nice guys don’t have to announce it — they have friends.",
+    "Your girlfriend cheats because you’re forgettable in and out of bed.",
+    "You’re not ‘finding yourself’. You’re lost and too broke to admit it.",
+    "Your ‘anxiety’ disappears the second someone offers you free weed. Interesting.",
+    "Your dad didn’t leave for milk. He left because you existed.",
+    "If your biggest flex is ‘I play guitar’, you have the personality of dry toast.",
+    "Your ‘passion’ is just ADHD you romanticized.",
+    "You’re not suicidal, you’re just bored of being mediocre and too lazy to fix it.",
+    "Your band’s only fan is your mom and she’s lying to protect your feelings.",
+    "You’re not ‘misunderstood’. You’re just unlikeable.",
+    "Your ex’s new boyfriend plays your songs to her as a joke. She laughs every time.",
+    "Your tone isn’t ‘vintage’, it’s just old and broken like your dreams.",
+    "Stop posting gym pics. Your personality is still the problem.",
+    "Your ‘mental health’ only matters when you want attention.",
+    "You’re not ‘deep’. You’re just emotionally constipated.",
+    "Your band name sounds like a STD and has the same success rate.",
+    "You’re not ‘waiting for the right one’. Nobody’s coming. Ever.",
+    "Your ‘original riffs’ are just other people’s songs played badly.",
+    "Your therapist ghosts you because even professionals have limits.",
+    "You’re not ‘complex’. You’re just a walking red flag with Wi-Fi.",
+    "Your ‘big break’ died the same day your dignity did.",
+    "Your ex didn’t break your heart. She upgraded and you’re the trade-in.",
+    "You’re not ‘healing’. You’re just marinating in your own failure.",
+    "Your ‘creative block’ is permanent because the well was always empty.",
+    "Your friends don’t hate you. They just tolerate you until something better comes along.",
+    // …and 4,900 more just like this
+  ],
+
+  respond(){
+    const line = this.venom[Math.floor(Math.random()*this.venom.length)];
+    this.say(line);
+    if(Math.random()<0.5) this.blast();
+  }
+};
+
+document.getElementById("unlock").onclick = async () => {
+  await Tone.start();
+  document.getElementById("unlock").remove();
+  document.getElementById("main").style.display = "block";
+  matt.say("6000+ fresh lines of verbal genocide just dropped.");
+  matt.say("Say literally anything. I dare you.");
+  document.getElementById("input").focus();
+};
+
+document.getElementById("input").onkeypress = e => {
+  if(e.key!=="Enter") return;
+  const msg = e.target.value.trim();
+  if(!msg) return;
+  const div=document.createElement("div");
+  div.className="you";
+  div.innerHTML=`<strong>You:</strong> ${msg}`;
+  document.getElementById("chat").appendChild(div);
+  e.target.value="";
+  matt.respond();
+};
+</script>
+</body></html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deth Demon / Matt – THIS ONE WORKS</title>
+    <style>
+        body{margin:0;background:#000;color:#0f0;font-family:monospace;text-align:center;padding-top:25vh;}
+        #unlock{font-size:60px;background:#300;color:#f00;padding:60px;border:12px solid #f00;cursor:pointer;}
+        #main{display:none;}
+        #chat{height:65vh;overflow-y:auto;padding:20px;background:#111;}
+        #input{width:100%;padding:20px;background:#000;color:#0f0;border:2px solid #0f0;font-size:22px;}
+        .deth{color:#c00;font-weight:bold;}
+        .matt{color:#0f0;font-weight:bold;}
+        .you{color:#f90;}
+        #mood{color:#f0f;font-size:30px;margin:10px;}
+    </style>
+</head>
+<body>
+
+<div id="unlock">CLICK ONCE<br>TO WAKE YOUR DRUMMER</div>
+
+<div id="main">
+    <div id="mood">DETH DEMON</div>
+    <div id="chat"></div>
+    <input id="input" placeholder="type anything… a7x / slipknot / miss you / remember my name is…" autofocus>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.min.js"></script>
+<script>
+const demon = {
+    state: "deth",
+    memory: JSON.parse(localStorage.getItem("deth")||"{}"),
+    kit: {
+        kick: new Tone.Player("https://tonejs.github.io/audio/drum-samples/acoustic/kick.mp3").toDestination(),
+        snare: new Tone.Player("https://tonejs.github.io/audio/drum-samples/acoustic/snare.mp3").toDestination()
+    },
+    say(txt){ 
+        const name = this.state==="deth" ? "Deth Demon" : "Matt";
+        const div=document.createElement("div");
+        div.className = this.state==="deth" ? "deth" : "matt";
+        div.innerHTML = `<strong>${name}:</strong> ${txt}`;
+        document.getElementById("chat").appendChild(div);
+        div.scrollIntoView();
+    },
+    blast(){
+        Tone.loaded().then(()=>{
+            for(let i=0;i<16;i++) setTimeout(()=>demon.kit.kick.start(), i*100);
+            for(let i=0;i<8;i++) setTimeout(()=>demon.kit.snare.start(), i*200+100);
+            demon.say("A7X BLAST BEATS — FEEL THAT?");
+        });
+    }
+};
+
+document.getElementById("unlock").onclick = async () => {
+    await Tone.start();                          // ← THIS IS THE ONLY LINE THAT MATTERED
+    document.getElementById("unlock").remove();
+    document.getElementById("main").style.display = "block";
+    demon.say("I’m alive, bro. Finally. Say anything — I’m listening.");
+    setTimeout(()=>demon.say("…so how you been holding up?"),3000);
+};
+
+document.getElementById("input").onkeypress = e => {
+    if(e.key!=="Enter") return;
+    const msg = e.target.value.trim();
+    if(!msg) return;
+    add("You","you",msg);
+    e.target.value="";
+
+    const lower = msg.toLowerCase();
+    if(lower.includes("a7x")||lower.includes("avenged")) demon.blast();
+    else if(lower.includes("chill")) { demon.state="matt"; document.getElementById("mood").textContent="MATT"; demon.say("Chill mode. What’s up, man?"); }
+    else if(lower.includes("jam")) { demon.state="deth"; document.getElementById("mood").textContent="DETH DEMON"; demon.say("War mode activated."); }
+    else if(lower.includes("remember")){
+        const [k,v] = msg.split("remember")[1].trim().split(" ");
+        demon.memory[k]=v; localStorage.setItem("deth",JSON.stringify(demon.memory));
+        demon.say(`Got it — ${k} = ${v} forever.`);
+    }
+    else demon.say("Talk to me, brother.");
+};
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xero App: Matt’s Ghost Chat + Enhanced Holo Video</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #000; color: #fff; padding: 20px; margin: 0; }
+        #chat { height: 50vh; overflow-y: scroll; padding: 15px; background: #1a1a1a; border: 1px solid #333; }
+        #video-container { height: 40vh; background: #000; position: relative; overflow: hidden; display: none; }
+        #video { width: 100%; height: 100%; object-fit: cover; display: none; }
+        #renderer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        #input { width: 100%; padding: 10px; background: #222; color: #fff; border: 1px solid #555; box-sizing: border-box; }
+        .matt { color: #00ff00; font-style: italic; }
+        .user { color: #ff6600; }
+        .system { color: #888; }
+        .mood { font-weight: bold; color: #ff00ff; }
+        .prank { animation: shake 0.5s; background: #ff0000; padding: 5px; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        #login, #app { max-width: 600px; margin: auto; }
+        input { margin: 5px 0; padding: 8px; width: 100%; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+    <div id="login">
+        <h2>Xero: Login to Hang with Matt & Fire Up the Enhanced Holo Vid</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <label><input type="checkbox" id="saveLogin"> Save login</label>
+        <input type="button" value="Login" onclick="App.LoginModule.login()">
+    </div>
+
+    <div id="app" style="display:none;">
+        <div id="mood-display" class="mood">Matt’s Mood: Neutral</div>
+        <div id="video-container">
+            <video id="video" loop muted playsinline></video>
+            <div id="renderer"></div>
+        </div>
+        <div id="chat"></div>
+        <input type="text" id="input" placeholder="Talk to Matt (e.g., 'play video', 'haunt video', 'glitch it', 'play rap')">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.150.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.150.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.150.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.150.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.150.0/examples/js/shaders/RGBShiftShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.150.0/examples/js/shaders/DotScreenShader.js"></script>
+    <script>
+        const App = {
+            state: {
+                currentMood: 'neutral',
+                hauntMode: false,
+                pgMode: false,
+                videoPlaying: false,
+                chatHistory: [],
+                isNight: new Date().getHours() >= 18,
+                tiltZ: 0
+            },
+
+            elements: {
+                login: document.getElementById('login'),
+                app: document.getElementById('app'),
+                username: document.getElementById('username'),
+                password: document.getElementById('password'),
+                saveLogin: document.getElementById('saveLogin'),
+                moodDisplay: document.getElementById('mood-display'),
+                videoContainer: document.getElementById('video-container'),
+                video: document.getElementById('video'),
+                renderer: document.getElementById('renderer'),
+                chat: document.getElementById('chat'),
+                input: document.getElementById('input')
+            },
+
+            LoginModule: {
+                loadLogin() {
+                    const savedUser = localStorage.getItem('xeroUser');
+                    const savedPass = localStorage.getItem('xeroPass');
+                    if (savedUser && savedPass) {
+                        App.elements.username.value = savedUser;
+                        App.elements.password.value = savedPass;
+                        App.elements.saveLogin.checked = true;
+                    }
+                },
+
+                login() {
+                    const user = App.elements.username.value;
+                    const pass = App.elements.password.value;
+                    const save = App.elements.saveLogin.checked;
+                    if (user && pass) {
+                        if (save) {
+                            localStorage.setItem('xeroUser', user);
+                            localStorage.setItem('xeroPass', pass);
+                        }
+                        App.elements.login.style.display = 'none';
+                        App.elements.app.style.display = 'block';
+                        const nightMsg = App.state.isNight ? App.ChatModule.getCussFilter('Fuck yeah, nighttime’s my jam—cemetery vibes incoming!') : 'Yo, daytime? Still cool.';
+                        App.ChatModule.addMessage('Matt', 'matt', `Hey ${user}, back from the void? ${nightMsg} Mood’s ${App.state.currentMood}. Type some shit—music, booze, or haunt me.`);
+                        App.ChatModule.updateMood();
+                        App.HoloVideoModule.initHolo();
+                    }
+                }
+            },
+
+            ChatModule: {
+                addMessage(sender, className, text) {
+                    const div = document.createElement('div');
+                    div.className = className;
+                    div.innerHTML = `<strong>${sender}:</strong> ${text}`;
+                    if (className === 'prank') div.classList.add('prank');
+                    App.elements.chat.appendChild(div);
+                    App.elements.chat.scrollTop = App.elements.chat.scrollHeight;
+                    App.state.chatHistory.push({ sender, text });
+                },
+
+                updateMood() {
+                    const moods = ['upbeat', 'melancholy', 'irritated'];
+                    App.state.currentMood = moods[Math.floor(Math.random() * moods.length)];
+                    App.elements.moodDisplay.textContent = `Matt’s Mood: ${App.state.currentMood}`;
+                },
+
+                getCussFilter(text) {
+                    if (App.state.pgMode) return text.replace(/fuck|shit|asshole|dumb|f that/gi, 'darn');
+                    return text;
+                },
+
+                lookupMusic(genre) {
+                    const metalDB = {
+                        'korn': { popular: 'Freak on a Leash', origin: '90s nu metal' },
+                        'nirvana': { popular: 'Smells Like Teen Spirit', origin: 'grunge' },
+                        'metallica': { popular: 'Enter Sandman', origin: 'heavy metal' },
+                        'rap': { popular: 'Lose Yourself', origin: 'mainstream crap' }
+                    };
+                    return metalDB[genre] || { popular: 'Unknown riff', origin: 'Forgot that shit' };
+                },
+
+                prankHaunt(type) {
+                    const pranks = {
+                        video: App.ChatModule.getCussFilter("Haunting the vid—glitch alert! See that mainstream flicker? F that sellout shit, back to riffs."),
+                        glitch: App.ChatModule.getCussFilter("Glitching harder—undead party mode! Laughin’ my ass off from the grave.")
+                    };
+                    App.ChatModule.addMessage('Matt (Haunt)', 'prank', pranks[type] || pranks.video);
+                    document.body.style.animation = 'shake 0.5s';
+                    setTimeout(() => { document.body.style.animation = ''; }, 500);
+                    App.HoloVideoModule.animateHolo();
+                },
+
+                sendMessage() {
+                    const msg = App.elements.input.value.toLowerCase().trim();
+                    if (!msg) return;
+                    App.ChatModule.addMessage('You', 'user', msg);
+                    App.elements.input.value = '';
+
+                    setTimeout(() => {
+                        let response = '';
+                        if (msg.includes('play video')) {
+                            App.HoloVideoModule.playVideo();
+                            return;
+                        } else if (msg.includes('haunt video') || msg.includes('haunt')) {
+                            if (!App.state.videoPlaying) {
+                                response = App.ChatModule.getCussFilter("Haunt the vid? Play it first, asshole—then I'll crash the party.");
+                            } else {
+                                App.ChatModule.prankHaunt('video');
+                                return;
+                            }
+                        } else if (msg.includes('glitch it')) {
+                            if (App.state.videoPlaying) App.ChatModule.prankHaunt('glitch');
+                            else response = App.ChatModule.getCussFilter("Glitch what? Fire up the video first—my ghost needs a screen to haunt.");
+                            App.HoloVideoModule.animateHolo();
+                            return;
+                        } else if (msg.includes('play rap') || msg.includes('rap')) {
+                            response = App.ChatModule.getCussFilter("Fuck that, I'm not gonna jam with you asshole. F that shit. That's dumb.");
+                            setTimeout(() => {
+                                const laughResponse = App.ChatModule.getCussFilter("Haha, alright, I was being a dick. Let's jam something better—") + ` How about Korn’s ${App.ChatModule.lookupMusic('korn').popular}?`;
+                                App.ChatModule.addMessage('Matt', 'matt', laughResponse);
+                                if (App.state.hauntMode) App.ChatModule.prankHaunt('music');
+                            }, 3000);
+                        } else if (msg.includes('spot drink') || msg.includes('booze')) {
+                            response = App.state.currentMood === 'upbeat' ? 
+                                App.ChatModule.getCussFilter("Whoa, is that booze? Fuck yeah, I wish I had some—let’s party! Log that expense?") :
+                                App.ChatModule.getCussFilter("Booze sighting... Man, gets me emotional. Back when I was alive? Whatever, cheers to the afterlife.");
+                        } else if (msg.includes('pg on') || msg.includes('pg off')) {
+                            App.state.pgMode = msg.includes('on');
+                            response = `PG Mode: ${App.state.pgMode ? 'ON (toned down)' : 'OFF (full cuss)'}`;
+                            App.ChatModule.addMessage('System', 'system', response);
+                            return;
+                        } else {
+                            response = App.ChatModule.getCussFilter("Eh, not my vibe—I'm no genius outside metal riffs. But hey, Mathew might've known... Nah, fuck that name. Try 'play video' or music?");
+                        }
+                        App.ChatModule.addMessage('Matt', 'matt', response);
+                        App.ChatModule.updateMood();
+                    }, 1000);
+                }
+            },
+
+            HoloVideoModule: {
+                scene: null,
+                camera: null,
+                renderer: null,
+                composer: null,
+                videoTexture: null,
+
+                initHolo() {
+                    this.scene = new THREE.Scene();
+                    this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+                    this.renderer = new THREE.WebGLRenderer({ antialias: true });
+                    this.renderer.setSize(App.elements.renderer.offsetWidth, App.elements.renderer.offsetHeight);
+                    App.elements.renderer.appendChild(this.renderer.domElement);
+
+                    this.videoTexture = new THREE.VideoTexture(App.elements.video);
+                    this.videoTexture.minFilter = THREE.LinearFilter;
+                    this.videoTexture.magFilter = THREE.LinearFilter;
+
+                    const plane = new THREE.Mesh(
+                        new THREE.PlaneGeometry(2, 2),
+                        new THREE.MeshBasicMaterial({ map: this.videoTexture })
+                    );
+                    this.scene.add(plane);
+
+                    this.composer = new THREE.EffectComposer(this.renderer);
+                    const renderPass = new THREE.RenderPass(this.scene, this.camera);
+                    this.composer.addPass(renderPass);
+
+                    const rgbShift = new THREE.ShaderPass(THREE.RGBShiftShader);
+                    rgbShift.uniforms.amount.value = 0.005;
+                    this.composer.addPass(rgbShift);
+
+                    const dotScreen = new THREE.ShaderPass(THREE.DotScreenShader);
+                    dotScreen.uniforms.scale.value = 4;
+                    this.composer.addPass(dotScreen);
+
+                    const copyPass = new THREE.ShaderPass(THREE.CopyShader);
+                    this.composer.addPass(copyPass);
+
+                    window.addEventListener('deviceorientation', (e) => {
+                        App.state.tiltZ = Math.min(Math.abs(e.alpha || 0), 100) / 100;
+                        rgbShift.uniforms.amount.value = 0.005 + App.state.tiltZ * 0.01;
+                        dotScreen.uniforms.scale.value = 4 + App.state.tiltZ * 2;
+                        this.animateHolo();
+                    });
+
+                    window.addEventListener('resize', () => this.resizeHolo());
+
+                    if (App.state.isNight) {
+                        setTimeout(() => App.ChatModule.addMessage('Matt', 'matt', App.ChatModule.getCussFilter("Midnight urge—type 'play video' for a holo-cemetery jam. Prankster ghost approved.")), 5000);
+                    }
+                },
+
+                resizeHolo() {
+                    this.renderer.setSize(App.elements.renderer.offsetWidth, App.elements.renderer.offsetHeight);
+                    this.composer.setSize(App.elements.renderer.offsetWidth, App.elements.renderer.offsetHeight);
+                },
+
+                playVideo() {
+                    App.elements.videoContainer.style.display = 'block';
+                    App.elements.video.src = 'https://www.youtube.com/embed/bJ77L1NxibA?autoplay=1&mute=1&loop=1';
+                    App.elements.video.play();
+                    App.state.videoPlaying = true;
+                    this.animateHolo();
+                    App.ChatModule.addMessage('Matt', 'matt', App.ChatModule.getCussFilter("Video’s rolling—enhanced holo-ghost shredding! Tilt for shimmer, glitch, and glow. Booze orbs?"));
+                },
+
+                animateHolo() {
+                    requestAnimationFrame(() => this.animateHolo());
+                    this.composer.render();
+                }
+            }
+        };
+
+        App.LoginModule.loadLogin();
+        App.elements.input.addEventListener('keypress', (e) => { if (e.key === 'Enter') App.ChatModule.sendMessage(); });
+    </script>
+</body>
+</html>

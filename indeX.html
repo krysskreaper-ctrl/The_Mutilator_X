@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KREAPER TRANSLATOR OS v1.0</title>
+
+
+<style>
+    body {
+        margin: 0;
+        background: #000;
+        font-family: 'Orbitron', sans-serif;
+        color: #a0ffb0;
+        overflow: hidden;
+    }
+
+    /* CRT EFFECT */
+    body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: repeating-linear-gradient(
+            rgba(0,255,100,0.1) 0px,
+            rgba(0,255,100,0.03) 2px,
+            transparent 3px
+        );
+        mix-blend-mode: overlay;
+        pointer-events: none;
+    }
+
+    .boot {
+        font-size: 12px;
+        color: #7fff7f;
+        padding: 20px;
+        line-height: 1.4;
+        font-family: monospace;
+    }
+
+    .app {
+        padding: 18px;
+        margin-top: 10px;
+    }
+
+    h1 {
+        font-weight: 900;
+        font-size: 24px;
+        text-align: center;
+        margin-bottom: 10px;
+        color: #98ff9c;
+        letter-spacing: 2px;
+    }
+
+    .controls {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    button {
+        padding: 10px 16px;
+        font-size: 13px;
+        border: 1px solid #45ff6a;
+        background: rgba(0,0,0,0.55);
+        color: #90ffa0;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: rgba(0,255,100,0.12);
+    }
+
+    /* MIC VISUALIZER */
+    .visualizer {
+        width: 90%;
+        height: 60px;
+        margin: 0 auto 20px auto;
+        background: rgba(0,255,100,0.05);
+        border: 1px solid #3eff6b;
+        border-radius: 4px;
+        display: flex;
+        align-items: flex-end;
+        padding: 4px;
+        gap: 3px;
+        overflow: hidden;
+    }
+
+    .bar {
+        width: 5px;
+        background: #00ff66;
+        height: 5%;
+        transition: height 0.05s linear;
+    }
+
+    /* SETTINGS DROPDOWN */
+    .settings-wrap {
+        text-align: center;
+        margin-bottom: 8px;
+    }
+
+    select {
+        background: #000;
+        color: #90ffa0;
+        border: 1px solid #3eff6b;
+        padding: 5px;
+        text-transform: uppercase;
+        font-size: 12px;
+        border-radius: 4px;
+    }
+
+    /* OUTPUT WINDOW */
+    .output {
+        border: 1px solid #40ff70;
+        background: rgba(0,255,100,0.03);
+        padding: 15px;
+        min-height: 120px;
+        width: 90%;
+        margin: auto;
+        border-radius: 4px;
+        font-size: 14px;
+        white-space: pre-wrap;
+        line-height: 1.5;
+    }
+
+    /* FOOTER COPYRIGHT */
+    .footer {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 9px;
+        color: #6cff8c;
+        opacity: 0.6;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- BOOT SCREEN -->
+<div class="boot">
+BOOTING KREAPER TRANSLATOR OS v1.0...<br>
+LINKING SPEECH ENGINE...<br>
+DETECTING NEURAL INPUT...<br>
+INITIALIZING NUCLEAR CORE...<br>
+LOADING LINGUISTIC DATABASE...<br>
+SYSTEM ONLINE<br><br>
+</div>
+
+<div class="app">
+
+<h1>THE KREAPER TRANSLATOR</h1>
+
+<!-- SETTINGS DROPDOWN -->
+<div class="settings-wrap">
+    <select id="mutater">
+        <option value="healthy">HEALTHY MODE</option>
+        <option value="infected">INFECTED MODE</option>
+        <option value="berserker">BERSERKER RAGE</option>
+        <option value="terminus_female">TERMINUS – FEMALE</option>
+        <option value="terminus_male">TERMINUS – MALE</option>
+    </select>
+</div>
+
+<!-- MIC VISUALIZER -->
+<div class="visualizer" id="visualizer"></div>
+
+<!-- CONTROLS -->
+<div class="controls">
+    <button onclick="startMic()">🎤 Speak</button>
+    <button onclick="stopMic()">■ Stop</button>
+    <button onclick="translate()">⚡ Translate</button>
+    <button onclick="speakOut()">🔊 Speak Output</button>
+    <button onclick="toggleAuto()">♾ Auto</button>
+</div>
+
+<div class="output" id="output">
+[ Translator Output Will Appear Here ]
+</div>
+
+<div class="footer">
+Join us in The Shadow Realm • © 2025 • ~The kReaper ProjeKt~
+</div>
+
+</div>
+
+<script>
+/* === VISUALIZER === */
+const visualizer = document.getElementById('visualizer');
+for (let i = 0; i < 40; i++) {
+    let bar = document.createElement('div');
+    bar.classList.add('bar');
+    visualizer.appendChild(bar);
+}
+let bars = document.querySelectorAll('.bar');
+
+let audioStream, audioContext, analyser, dataArray;
+
+function startMic() {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            audioStream = stream;
+            audioContext = new AudioContext();
+            const source = audioContext.createMediaStreamSource(stream);
+
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 256;
+
+            source.connect(analyser);
+
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+            animateBars();
+        })
+        .catch(e => console.log(e));
+}
+
+function animateBars() {
+    requestAnimationFrame(animateBars);
+    if (!analyser) return;
+
+    analyser.getByteFrequencyData(dataArray);
+
+    bars.forEach((bar, i) => {
+        let h = dataArray[i] / 2;
+        bar.style.height = h + "%";
+    });
+}
+
+function stopMic() {
+    if (audioStream) {
+        audioStream.getTracks().forEach(t => t.stop());
+    }
+}
+
+/* === TRANSLATION LOGIC (PLACEHOLDER FOR NOW) === */
+function translate() {
+    let mode = document.getElementById('mutater').value;
+    let out = document.getElementById('output');
+
+    const responses = {
+        healthy: "Calm, clean translation ready.",
+        infected: "Toxic humor activated. Filth flowing.",
+        berserker: "All filters removed. Cruelty maximum.",
+        terminus_female: "Terminus-F online: sarcastic, bipolar, wasteland rage.",
+        terminus_male: "Terminus-M online: stoic, angry, metalhead edge."
+    };
+
+    out.innerText = responses[mode];
+}
+
+function speakOut() {
+    let msg = new SpeechSynthesisUtterance(document.getElementById("output").innerText);
+    msg.pitch = 0.6;
+    msg.rate = 0.85;
+    msg.voice = speechSynthesis.getVoices()[0];
+    speechSynthesis.speak(msg);
+}
+
+let auto = false;
+function toggleAuto() {
+    auto = !auto;
+    document.getElementById("output").innerText = auto ? "AUTO MODE ENABLED" : "AUTO MODE DISABLED";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deth Demon – CLICK ONCE AND I WORK</title>
+    <style>
+        body{margin:0;background:#000;color:#f00;font-family:monospace;text-align:center;padding-top:20vh;}
+        #unlock{font-size:50px;background:#300;color:#f00;padding:30px;border:5px solid #f00;cursor:pointer;}
+        #chat,#input{display:none;}
+        .demon{color:#c00;font-weight:bold;}
+    </style>
+</head>
+<body>
+
+<div id="unlock">CLICK HERE TO WAKE DETH DEMON<br>(unlocks drums + voice)</div>
+
+<div id="chat"></div>
+<input id="input" placeholder="type or yell: a7x / blast / remember [thing]">
+
+<script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.min.js"></script>
+<script>
+// ===== DETH DEMON DRUMMER (A7X ONLY) + MEMORY =====
+const demon = {
+    memory: JSON.parse(localStorage.getItem('dethMemory')||'{}'),
+    kit: {
+        kick: new Tone.Player("https://tonejs.github.io/audio/drum-samples/acoustic/kick.mp3").toDestination(),
+        snare: new Tone.Player("https://tonejs.github.io/audio/drum-samples/acoustic/snare.mp3").toDestination(),
+        crash: new Tone.Player("https://tonejs.github.io/audio/drum-samples/acoustic/crash.mp3").toDestination()
+    },
+    say(txt){ 
+        const div=document.createElement("div"); 
+        div.className="demon"; 
+        div.innerHTML=`<strong>Deth Demon:</strong> ${txt}`;
+        document.getElementById("chat").appendChild(div);
+        div.scrollIntoView();
+    },
+    a7x(){ 
+        Tone.loaded().then(()=>{
+            new Tone.Sequence((t,n)=>{demon.kit[n].start(t)},["kick","snare","kick","kick","snare"],"16n").start(0);
+            Tone.Transport.bpm.value=195;
+            Tone.Transport.start();
+            demon.say("A7X BLAST BEATS — BAT COUNTRY OR BUST");
+            setTimeout(()=>Tone.Transport.stop(),5000);
+        });
+    },
+    remember(k,v){ demon.memory[k]=v; localStorage.setItem('dethMemory',JSON.stringify(demon.memory)); demon.say(`Burned into my skull: ${k} = ${v}`); }
+};
+
+// ===== ONE-CLICK UNLOCK EVERYTHING =====
+document.getElementById("unlock").onclick = async () => {
+    await Tone.start();                                    // unlocks audio
+    document.getElementById("unlock").style.display="none";
+    document.getElementById("chat").style.display="block";
+    document.getElementById("input").style.display="block";
+    document.getElementById("input").focus();
+
+    demon.say("I’M ALIVE. Say or type “a7x” and I’ll prove it. Memory is permanent. Voice works in Chrome.");
+    
+    // text input
+    document.getElementById("input").onkeypress = e => {
+        if(e.key!=="Enter") return;
+        const msg = e.target.value.trim().toLowerCase();
+        e.target.value="";
+        if(msg.includes("a7x") || msg.includes("avenged")) demon.a7x();
+        else if(msg.includes("remember")) {
+            const [k,v] = msg.split("remember")[1].trim().split(" ");
+            demon.remember(k,v);
+        }
+        else demon.say("Say “a7x” or “remember [something]”");
+    };
+};
+</script>
+</body>
+</html>

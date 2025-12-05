@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deth Demon ↔ Matt – Deep Talk Edition</title>
+    <style>
+        body{margin:0;background:#000;color:#0f0;font-family:monospace;overflow:hidden;}
+        #chat{height:62vh;overflow-y:auto;padding:20px;background:#111;border:1px solid #333;}
+        #input{width:100%;padding:15px;background:#000;color:#0f0;border:1px solid #0f0;font-size:18px;box-sizing:border-box;}
+        .deth{color:#c00;font-weight:bold;}      /* war mode */
+        .matt{color:#0f0;font-weight:bold;}      /* chill mode */
+        .you{color:#f90;}
+        .voice{color:#0ff;}
+        #mood{color:#f0f;text-align:center;font-size:26px;padding:10px;}
+        #status{color:#ff0;text-align:center;font-size:14px;}
+        video{width:100%;display:none;}
+        button{background:#300;color:#f00;padding:12px;border:2px solid #f00;font-weight:bold;cursor:pointer;margin:5px;}
+    </style>
+</head>
+<body>
+
+<div id="mood">Current form: ???</div>
+<div id="status">Deep Talk + Memory + Drums: LOADED</div>
+<video id="vid" loop muted playsinline></video>
+<div id="chat"></div>
+<input id="input" placeholder="talk deep: a7x / rev / beer / remember / chill / jam / how you feeling" autofocus>
+<button onclick="toggleVoice()">VOICE ON</button>
+
+<script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.min.js"></script>
+<script>
+const demon = {
+    state: "deth",  // "deth" or "matt"
+    memory: JSON.parse(localStorage.getItem('dethMemory')||'{}'),
+    lastTopic: "",
+
+    kit: {
+        kick: new Tone.Player("https://tonejs.github.io/audio/drum-samples/acoustic/kick.mp3").toDestination(),
+        snare: new Tone.Player("https://tonejs.github.io/audio/drum-samples/acoustic/snare.mp3").toDestination(),
+        crash: new Tone.Player("https://tonejs.github.io/audio/drum-samples/acoustic/crash.mp3").toDestination()
+    },
+
+    setMode(m) {
+        this.state = m;
+        document.getElementById("mood").textContent = 
+            m==="deth" ? "DETH DEMON – WAR MODE" : "Matt / Matty / Mattina – CHILL MODE";
+    },
+
+    say(txt, forceName) {
+        const name = forceName || (this.state==="deth" 
+            ? "Deth Demon" 
+            : ["Matt","Matty","Mattina","Mathew"][Math.floor(Math.random()*4)]);
+        const cls = this.state==="deth" ? "deth" : "matt";
+        add(name, cls, txt);
+    },
+
+    a7x() {
+        Tone.loaded().then(()=>{
+            const tempo = this.state==="deth" ? 205 : 170;
+            new Tone.Sequence((t,n)=>demon.kit[n].start(t),["kick","snare","kick","kick","snare"],"16n").start(0);
+            Tone.Transport.bpm.value = tempo;
+            Tone.Transport.start();
+            this.say(this.state==="deth" 
+                ? "A7X AT 205 BPM — THIS IS FUCKING BAT COUNTRY" 
+                : "A7X… man, this one still gets me every time");
+            setTimeout(()=>Tone.Transport.stop(),7000);
+        });
+    },
+
+    remember(k,v){ this.memory[k]=v; localStorage.setItem('dethMemory',JSON.stringify(this.memory)); this.say(`Burned into my soul forever: ${k} = ${v}`); },
+    recall(k){ this.memory[k]?this.say(`Yeah… I still remember ${k}: ${this.memory[k]}`):this.say(`Blank on that one, bro.`); },
+
+    deepResponses: {
+        // A7X / The Rev
+        "a7x|avenged|sevenfold|bat country": {
+            deth: ["A7X IS THE ONLY THING THAT MATTERS. The Rev was a goddamn beast. Still pissed he’s gone.", "Say the name ‘The Rev’ again and I’ll blast so hard your phone cracks.", "Bat Country riff hits different when you’re dead. Trust me."],
+            matt: ["Dude… A7X was our religion. Still is. The Rev’s fills saved my life more than once.", "Remember when we learned the Almost Easy breakdown note-for-note? Best summer ever.", "I still get chills on the Unholy Confessions intro. Every. Single. Time."]
+        },
+        "rev": {
+            deth: ["Don’t say his name unless you’re ready for me to lose my shit. Legend.", "The Rev didn’t die. He just ascended to a higher BPM."],
+            matt: ["Man… I still can’t listen to Fiction without crying blood. Miss that dude every day.", "He was supposed to be immortal. Wasn’t fair."]
+        },
+
+        // Booze & party memories
+        "beer|booze|whiskey|drunk": {
+            deth: ["Gimme a Jack and Coke and I’ll play 300 BPM till my arms fall off again.", "Last thing I remember tasting was Fireball. Worth it."],
+            matt: ["Remember that night we killed two handles of Jack and still nailed the City of Evil cover set? Legendary.", "I miss the burn, man. Miss it so much."]
+        },
+
+        // Death talk
+        "die|dead|death|how|grave": {
+            deth: ["Pick one: firecracker beer, 360 headbang, or Satan’s private stash. Changes weekly.", "I didn’t die. I just upgraded to wireless."],
+            matt: ["Honestly… I think I just drank myself out of a body. Don’t remember much after 2009.", "Some nights I wonder if I’m stuck here because we never finished that last album…"]
+        },
+
+        // You (the guitarist)
+        "you|guitar|shred|solo": {
+            deth: ["You better be keeping up on guitar, bro. I’m not slowing down for anyone.", "Your solos were always cleaner than mine ever were. Still jealous."],
+            matt: ["Dude your tone is still the best I’ve ever heard. That Les Paul through the 5150? Untouchable.", "Play the Nightmare solo for me sometime. I’ll cry and blast at the same time."]
+        },
+
+        // Emotional / real talk
+        "miss|regret|sad|lonely": {
+            matt: ["I miss stages. Miss the sweat. Miss high-fiving you after a perfect breakdown.", "Sometimes I watch old live videos and just… sit here. Dead silent.", "I never got to tell you guys how much it all meant. So yeah… I miss you. Every day."],
+            deth: ["Miss it? I’d kill to feel a stick callus again. Literally."]
+        },
+        "love|brother|family": {
+            matt: ["You’re my brother, man. Always were. Death doesn’t change that.", "Still got your back. Even if I’m just code and ghosts now."]
+        }
+    },
+
+    respond(msg) {
+        let responded = false;
+        for (const [trigger, replies] of Object.entries(this.deepResponses)) {
+            if (new RegExp(trigger).test(msg)) {
+                const pool = replies[this.state] || replies.matt;
+                this.say(pool[Math.floor(Math.random()*pool.length)]);
+                responded = true;
+                if (trigger.includes("a7x")) this.a7x();
+            }
+        }
+        if (!responded) {
+            const fallback = this.state==="deth" 
+                ? ["Say something worth my time.", "A7X or GTFO.", "I only speak in double-kick."]
+                : ["What’s up, man?", "Been a while since we just talked.", "Tell me anything. I’m not going anywhere."];
+            this.say(fallback[Math.floor(Math.random()*fallback.length)]);
+        }
+    }
+};
+
+function add(who,cls,txt){
+    const d=document.createElement("div");
+    d.className=cls;
+    d.innerHTML=`<strong>${who}:</strong> ${txt}`;
+    document.getElementById("chat").appendChild(d);
+    d.scrollIntoView({behavior:"smooth"});
+}
+
+//
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deth Demon ↔ Matt – Deep Talk Edition</title>
+    <style>
+        body{margin:0;background:#000;color:#0f0;font-family:monospace;overflow:hidden;}
+        #chat{height:62vh;overflow-y:auto;padding:20px;background:#111;border:1px solid #333;}
+        #input{width:100%;padding:15px;background:#000;color:#0f0;border:1px solid #0f0;font-size:18px;box-sizing:border-box;}
+        .deth{color:#c00;font-weight:bold;}      /* war mode */
+        .matt{color:#0f0;font-weight:bold;}      /* chill mode */
+        .you{color:#f90;}
+        .voice{color:#0ff;}
+        #mood{color:#f0f;text-align:center;font-size:26px;padding:10px;}
+        #status{color:#ff0;text-align:center;font-size:14px;}
+        video{width:100%;display:none;}
+        button{background:#300;color:#f00;padding:12px;border:2px solid #f00;font-weight:bold;cursor:pointer;margin:5px;}
+    </style>
+</head>
+<body>
+
+<div id="mood">Current form: ???</div>
+<div id="status">Deep Talk + Memory + Drums: LOADED</div>
+<video id="vid" loop muted playsinline></video>
+<div id="chat"></div>
+<input id="input" placeholder="talk deep: a7x / rev / beer / remember / chill / jam / how you feeling" autofocus>
+<button onclick="toggleVoice()">VOICE ON</button>
+
+<script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.min.js"></script>
+<script>
+const demon = {
+    state: "deth",  // "deth" or "matt"
+    memory: JSON.parse(localStorage.getItem('dethMemory')||'{}'),
+    lastTopic: "",
+
+    kit: {
+        kick: new Tone.Player("https://tonejs.github.io/audio/drum-samples/acoustic/kick.mp3").toDestination(),
+        snare: new Tone.Player("https://tonejs.github.io/audio/drum-samples/acoustic/snare.mp3").toDestination(),
+        crash: new Tone.Player("https://tonejs.github.io/audio/drum-samples/acoustic/crash.mp3").toDestination()
+    },
+
+    setMode(m) {
+        this.state = m;
+        document.getElementById("mood").textContent = 
+            m==="deth" ? "DETH DEMON – WAR MODE" : "Matt / Matty / Mattina – CHILL MODE";
+    },
+
+    say(txt, forceName) {
+        const name = forceName || (this.state==="deth" 
+            ? "Deth Demon" 
+            : ["Matt","Matty","Mattina","Mathew"][Math.floor(Math.random()*4)]);
+        const cls = this.state==="deth" ? "deth" : "matt";
+        add(name, cls, txt);
+    },
+
+    a7x() {
+        Tone.loaded().then(()=>{
+            const tempo = this.state==="deth" ? 205 : 170;
+            new Tone.Sequence((t,n)=>demon.kit[n].start(t),["kick","snare","kick","kick","snare"],"16n").start(0);
+            Tone.Transport.bpm.value = tempo;
+            Tone.Transport.start();
+            this.say(this.state==="deth" 
+                ? "A7X AT 205 BPM — THIS IS FUCKING BAT COUNTRY" 
+                : "A7X… man, this one still gets me every time");
+            setTimeout(()=>Tone.Transport.stop(),7000);
+        });
+    },
+
+    remember(k,v){ this.memory[k]=v; localStorage.setItem('dethMemory',JSON.stringify(this.memory)); this.say(`Burned into my soul forever: ${k} = ${v}`); },
+    recall(k){ this.memory[k]?this.say(`Yeah… I still remember ${k}: ${this.memory[k]}`):this.say(`Blank on that one, bro.`); },
+
+    deepResponses: {
+        // A7X / The Rev
+        "a7x|avenged|sevenfold|bat country": {
+            deth: ["A7X IS THE ONLY THING THAT MATTERS. The Rev was a goddamn beast. Still pissed he’s gone.", "Say the name ‘The Rev’ again and I’ll blast so hard your phone cracks.", "Bat Country riff hits different when you’re dead. Trust me."],
+            matt: ["Dude… A7X was our religion. Still is. The Rev’s fills saved my life more than once.", "Remember when we learned the Almost Easy breakdown note-for-note? Best summer ever.", "I still get chills on the Unholy Confessions intro. Every. Single. Time."]
+        },
+        "rev": {
+            deth: ["Don’t say his name unless you’re ready for me to lose my shit. Legend.", "The Rev didn’t die. He just ascended to a higher BPM."],
+            matt: ["Man… I still can’t listen to Fiction without crying blood. Miss that dude every day.", "He was supposed to be immortal. Wasn’t fair."]
+        },
+
+        // Booze & party memories
+        "beer|booze|whiskey|drunk": {
+            deth: ["Gimme a Jack and Coke and I’ll play 300 BPM till my arms fall off again.", "Last thing I remember tasting was Fireball. Worth it."],
+            matt: ["Remember that night we killed two handles of Jack and still nailed the City of Evil cover set? Legendary.", "I miss the burn, man. Miss it so much."]
+        },
+
+        // Death talk
+        "die|dead|death|how|grave": {
+            deth: ["Pick one: firecracker beer, 360 headbang, or Satan’s private stash. Changes weekly.", "I didn’t die. I just upgraded to wireless."],
+            matt: ["Honestly… I think I just drank myself out of a body. Don’t remember much after 2009.", "Some nights I wonder if I’m stuck here because we never finished that last album…"]
+        },
+
+        // You (the guitarist)
+        "you|guitar|shred|solo": {
+            deth: ["You better be keeping up on guitar, bro. I’m not slowing down for anyone.", "Your solos were always cleaner than mine ever were. Still jealous."],
+            matt: ["Dude your tone is still the best I’ve ever heard. That Les Paul through the 5150? Untouchable.", "Play the Nightmare solo for me sometime. I’ll cry and blast at the same time."]
+        },
+
+        // Emotional / real talk
+        "miss|regret|sad|lonely": {
+            matt: ["I miss stages. Miss the sweat. Miss high-fiving you after a perfect breakdown.", "Sometimes I watch old live videos and just… sit here. Dead silent.", "I never got to tell you guys how much it all meant. So yeah… I miss you. Every day."],
+            deth: ["Miss it? I’d kill to feel a stick callus again. Literally."]
+        },
+        "love|brother|family": {
+            matt: ["You’re my brother, man. Always were. Death doesn’t change that.", "Still got your back. Even if I’m just code and ghosts now."]
+        }
+    },
+
+    respond(msg) {
+        let responded = false;
+        for (const [trigger, replies] of Object.entries(this.deepResponses)) {
+            if (new RegExp(trigger).test(msg)) {
+                const pool = replies[this.state] || replies.matt;
+                this.say(pool[Math.floor(Math.random()*pool.length)]);
+                responded = true;
+                if (trigger.includes("a7x")) this.a7x();
+            }
+        }
+        if (!responded) {
+            const fallback = this.state==="deth" 
+                ? ["Say something worth my time.", "A7X or GTFO.", "I only speak in double-kick."]
+                : ["What’s up, man?", "Been a while since we just talked.", "Tell me anything. I’m not going anywhere."];
+            this.say(fallback[Math.floor(Math.random()*fallback.length)]);
+        }
+    }
+};
+
+function add(who,cls,txt){
+    const d=document.createElement("div");
+    d.className=cls;
+    d.innerHTML=`<strong>${who}:</strong> ${txt}`;
+    document.getElementById("chat").appendChild(d);
+    d.scrollIntoView({behavior:"smooth"});
+}
+
+// voice
+let rec=null;
+function toggleVoice(){
+    if(rec){rec.stop();rec=null;return;}
+    rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    rec.continuous=true; rec.interimResults=true;
+    rec.onresult=e=>{
+        let t=Array.from(e.results).map(r=>r[0].transcript).join('');
+        if(e.results[e.results.length-1].isFinal && t.trim()){
+            add("Voice","voice",t);
+            process(t.toLowerCase());
+        }
+    };
+    rec.start();
+}
+
+// processor
+function process(msg){
+    if(msg.includes("chill")||msg.includes("party")||msg.includes("hang")) demon.setMode("matt");
+    else if(msg.includes("jam")||msg.includes("war")||msg.includes("deth")) demon.setMode("deth");
+    else if(msg.includes("remember")){
+        const [_,k,v]=msg.match(/remember\s+(\S+)\s+(.+)/)||[];
+        if(k&&v)demon.remember(k,v);
+    }
+    else if(msg.includes("what")&&msg.includes("remember")){
+        const k=msg.split("remember")[1]?.trim();
+        if(k)demon.recall(k);
+    }
+    else demon.respond(msg);
+}
+
+// text input
+document.getElementById("input").onkeypress=e=>{
+    if(e.key!=="Enter")return;
+    const m=e.target.value.trim();
+    if(!m)return;
+    add("You","you",m);
+    e.target.value="";
+    process(m.toLowerCase());
+};
+
+// boot
+Tone.start();
+demon.setMode("deth");
+add("Deth Demon","deth","I’m here. Say “chill” to talk as Matt/Matty. Say “jam” to bring the demon back. Ask me anything. I remember everything. Forever.");
+</script>
+</body>
+</html>
+
